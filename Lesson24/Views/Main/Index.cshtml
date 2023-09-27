@@ -41,7 +41,7 @@
 </div>
 <script>
     async function onRefreshClick(i, id) {
-        let response = await fetch(`product/${id}`);
+        let response = await fetch(`api/product/${id}`);
         let product = await response.json();
         
         setProduct(i,  product);
@@ -73,7 +73,7 @@
     
     async function onSendUpdateClick(i, id) {
         let updatedProduct = getProduct(i);
-        let response = await fetch(`product/${id}`, {
+        let response = await fetch(`api/product/${id}`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'

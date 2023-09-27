@@ -14,18 +14,21 @@ export class Shop extends Component {
 
   static renderCatalog(products) {
     return (
-        <div class="row">
-            {products.map(product =>
-              <div className="col-sm-4">
+        <div className="row">
+            {products.map(product => {
+              const imageUrl = `/api/image/${product.id}`;
+              return (
+              <div className="col-sm-4" key={product.id}>
                 <div className="card m-3" style={{width: "18rem"}}>
-                  <img className="card-img-top" src="https://i.pickadummy.com/index.php?imgsize=600x400" alt="Card image cap"/>
+                  <img className="card-img-top" src={imageUrl} alt="Card image cap"/>
                   <div className="card-body">
-                    <h5 className="card-title">{product.Name ?? "Some name"}</h5>
-                    <p className="card-text">{product.Description ?? "Some description"}</p>
+                    <h5 className="card-title">{product.name ?? "Some name"}</h5>
+                    <p className="card-text">{product.description ?? "Some description"}</p>
+                    <p className="card-text">Цена: {product.price ?? 0}</p>
                     <button className="btn btn-primary">В корзину</button>
                   </div>
                 </div>
-              </div>
+              </div>)}
             )}
         </div>
     );
@@ -45,7 +48,7 @@ export class Shop extends Component {
   }
 
   async populateWeatherData() {
-    const response = await fetch('weatherforecast');
+    const response = await fetch('/api/product/list');
     const data = await response.json();
     this.setState({ products: data, loading: false });
   }

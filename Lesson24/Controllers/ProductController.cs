@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Lesson24.Controllers;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ProductController : ControllerBase
 {
     private readonly IDataContext _context;
@@ -15,6 +15,33 @@ public class ProductController : ControllerBase
         _context = context;
     }
 
+    [HttpGet("list")]
+    public async Task<ProductModel[]> GetProductList()
+    {
+        var dbProducts = await _context.SelectProducts();
+
+        var products = dbProducts.Select((dbProduct) =>
+        {
+
+            ProductModel product = dbProduct.ProductType switch
+            {
+                Data.Models.ProductType.Accessories => new AccessoriesModel(),
+                Data.Models.ProductType.Book => new BookModel(),
+                Data.Models.ProductType.Food => new FoodModel()
+            };
+
+            product.Id = dbProduct.Id;
+            product.Name = dbProduct.Name;
+            product.Description = dbProduct.Description;
+            product.Price = dbProduct.Price;
+
+            return product;
+        }).ToArray();
+        
+        return products;
+    }
+    
+    
     [HttpGet("{id}")]
     public async Task<ProductModel?> GetProduct([FromRoute]int id)
     {
